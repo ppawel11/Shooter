@@ -24,7 +24,6 @@ public:
     void start();
     void sendAlivePackets();
     void readGameStatus();
-    void getGameId();
     void disable();
     void enable();
 };

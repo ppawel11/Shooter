@@ -10,6 +10,7 @@ Game::Game(){
     commands_counter = 0;
     game_id = "";
     over.lock();
+    ready.lock();
 }
 
 void Game::start() {
@@ -33,6 +34,7 @@ bool Game::isRunning() {
 void Game::getTcpUpdate(std::string &update){
     if(update[0] == 'X') {
         game_id = update.substr(1);
+        ready.unlock();
         std::cout << "GAME ID: " << game_id << std::endl;
     }else if (update == protocol::start){
         start();
@@ -63,7 +65,8 @@ bool Game::isFinished() {
     return finished;
 }
 
-const std::string &Game::getGameId() const {
+const std::string &Game::getGameId() {
+    ready.lock();
     return game_id;
 }
 

@@ -21,6 +21,7 @@ class Game {
     BlockingQueue<std::string> commands_to_send;
     std::thread main_thread;
     std::mutex over;
+    std::mutex ready;
 public:
     Game();
     void start();
@@ -28,7 +29,7 @@ public:
     bool isRunning();
     bool isFinished();
     void disconnect();
-    const std::string &getGameId() const;
+    const std::string &getGameId();
     std::string getNextCommand();
     void getTcpUpdate(std::string &update);
     void getUdpUpdate(std::string &update);
