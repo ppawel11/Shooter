@@ -8,11 +8,9 @@ int main() {
     game_manager->setUpTcpConnection();
     game_manager->setUpUdpSocket();
 
-    std::thread game_t(&GameManager::initGame, game_manager, game);
-    while(!game->isFinished())
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    game_manager->initGame(game);
 
-    game_t.join();
+    game->waitUntilOver();
 
     return 0;
 }

@@ -20,6 +20,7 @@ class Game {
     int commands_counter;
     BlockingQueue<std::string> commands_to_send;
     std::thread main_thread;
+    std::mutex over;
 public:
     Game();
     void start();
@@ -33,6 +34,7 @@ public:
     void getUdpUpdate(std::string &update);
     void addCommand(std::string command);
     void addCommands(); // only for testing
+    void waitUntilOver();
 };
 
 

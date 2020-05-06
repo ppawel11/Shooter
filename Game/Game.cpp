@@ -9,6 +9,7 @@ Game::Game(){
     finished = false;
     commands_counter = 0;
     game_id = "";
+    over.lock();
 }
 
 void Game::start() {
@@ -22,6 +23,7 @@ void Game::stop(){
     if(!finished)
         finished = true;
     addCommand(std::string(protocol::end_of_game));
+    over.unlock();
 }
 
 bool Game::isRunning() {
@@ -50,6 +52,7 @@ void Game::disconnect() {
     finished = true;
     if(running)
         stop();
+    over.unlock();
 }
 
 std::string Game::getNextCommand() {
@@ -74,4 +77,8 @@ void Game::addCommands() {
 
 void Game::addCommand(std::string command) {
     commands_to_send.push(command);
+}
+
+void Game::waitUntilOver() {
+    over.lock();
 }
