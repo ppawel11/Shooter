@@ -11,8 +11,8 @@ TcpHandler::TcpHandler(std::shared_ptr<TcpConnection> &connection) {
 }
 
 void TcpHandler::start() {
-    keepAliveSender = std::thread(&TcpHandler::sendAlivePackets, this);
-    gameStatusReader = std::thread(&TcpHandler::readGameStatus, this);
+    keep_alive_sender = std::thread(&TcpHandler::sendAlivePackets, this);
+    game_info_reader = std::thread(&TcpHandler::recvGameInfo, this);
 }
 
 void TcpHandler::sendAlivePackets() {
@@ -27,7 +27,7 @@ void TcpHandler::sendAlivePackets() {
     }
 }
 
-void TcpHandler::readGameStatus(){
+void TcpHandler::recvGameInfo(){
     std::string received;
     while(active){
         received = connection->readPacket();
@@ -52,6 +52,6 @@ void TcpHandler::attachGame(std::shared_ptr<Game> &game) {
 
 TcpHandler::~TcpHandler() {
     active = false;
-    keepAliveSender.join();
-    gameStatusReader.join();
+    keep_alive_sender.join();
+    game_info_reader.join();
 }

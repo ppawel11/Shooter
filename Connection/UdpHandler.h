@@ -14,8 +14,8 @@ class UdpHandler {
     std::shared_ptr<UdpConnection> connection;
     std::shared_ptr<Game> game;
 
-    std::thread commandsSender;
-    std::thread gameStatusReader;
+    std::thread commands_sender;
+    std::thread game_state_reader;
 
     bool active;
     std::string init_packet;

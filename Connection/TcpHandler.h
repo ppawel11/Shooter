@@ -14,8 +14,8 @@
 class TcpHandler {
     std::shared_ptr<TcpConnection> connection;
     std::shared_ptr<Game> game;
-    std::thread keepAliveSender;
-    std::thread gameStatusReader;
+    std::thread keep_alive_sender;
+    std::thread game_info_reader;
     bool active;
 public:
     TcpHandler(std::shared_ptr<TcpConnection> &connection);
@@ -23,7 +23,7 @@ public:
     void attachGame(std::shared_ptr<Game> &game);
     void start();
     void sendAlivePackets();
-    void readGameStatus();
+    void recvGameInfo();
     void disable();
     void enable();
 };

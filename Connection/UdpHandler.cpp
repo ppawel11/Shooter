@@ -13,8 +13,8 @@ UdpHandler::UdpHandler(std::shared_ptr<UdpConnection> &connection) {
 
 void UdpHandler::start() {
     sendInitPackets();
-    gameStatusReader = std::thread(&UdpHandler::recvGameState, this);
-    commandsSender = std::thread(&UdpHandler::sendCommandsToServer, this);
+    game_state_reader = std::thread(&UdpHandler::recvGameState, this);
+    commands_sender = std::thread(&UdpHandler::sendCommandsToServer, this);
 }
 
 void UdpHandler::sendCommandsToServer() {
@@ -61,7 +61,7 @@ void UdpHandler::setInitPacket(std::string init_packet) {
 
 UdpHandler::~UdpHandler() {
     active = false;
-    gameStatusReader.join();
-    commandsSender.join();
+    game_state_reader.join();
+    commands_sender.join();
 }
 
