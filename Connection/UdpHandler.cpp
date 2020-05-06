@@ -4,7 +4,7 @@
 
 #include "UdpHandler.h"
 
-UdpHandler::UdpHandler(UdpConnection *connection) {
+UdpHandler::UdpHandler(std::shared_ptr<UdpConnection> &connection) {
     this->connection = connection;
     this->game = nullptr;
     active = true;
@@ -12,8 +12,7 @@ UdpHandler::UdpHandler(UdpConnection *connection) {
 
 
 void UdpHandler::start() {
-    initPacketSender = std::thread(&UdpHandler::sendInitPackets, this);
-    initPacketSender.join();
+    sendInitPackets();
     gameStatusReader = std::thread(&UdpHandler::recvGameState, this);
     commandsSender = std::thread(&UdpHandler::sendCommandsToServer, this);
 }
@@ -22,7 +21,7 @@ void UdpHandler::sendCommandsToServer() {
     while(active && game->isRunning()){
         std::string command = game->getNextCommand();
         if(command == protocol::end_of_game) {
-             active = false;
+            active = false;
             break;
         }
         connection->sendPacket(command.c_str());
@@ -52,7 +51,7 @@ void UdpHandler::enable() {
     active = true;
 }
 
-void UdpHandler::attachGame(Game *game) {
+void UdpHandler::attachGame(std::shared_ptr<Game> &game) {
     this->game = game;
 }
 

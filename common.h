@@ -23,7 +23,7 @@ namespace protocol{
     static const char * alive = {"alive"};
     static const char * end_of_game = {"EOG"};
     static const char * start = {"start"};
-    static const char * stop = {"STOP"};
+    static const char * stop = {"stop"};
 }
 
 #endif //TIN_COMMON_H

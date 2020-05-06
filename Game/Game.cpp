@@ -14,12 +14,14 @@ Game::Game(){
 void Game::start() {
     running = true;
     main_thread = std::thread(&Game::addCommands, this);
+    main_thread.detach();
 }
 
 void Game::stop(){
     running = false;
+    if(!finished)
+        finished = true;
     addCommand(std::string(protocol::end_of_game));
-    main_thread.join();
 }
 
 bool Game::isRunning() {
@@ -36,11 +38,11 @@ void Game::getTcpUpdate(std::string &update){
     else if(update == protocol::stop) {
         stop();
     }
-    std::cout<<"TCP : "<<update<<std::endl;
+    std::cout<<"TCP RECV: "<<update<<std::endl;
 }
 
 void Game::getUdpUpdate(std::string &update) {
-    std::cout<<"UDP : "<<update<<std::endl;
+    std::cout<<"UDP RECV: "<<update<<std::endl;
 }
 
 void Game::disconnect() {
@@ -48,7 +50,6 @@ void Game::disconnect() {
     finished = true;
     if(running)
         stop();
-    // todo: handle disconnection
 }
 
 std::string Game::getNextCommand() {
@@ -65,7 +66,8 @@ const std::string &Game::getGameId() const {
 
 void Game::addCommands() {
     while(running){
-        commands_to_send.push(std::string(std::to_string(commands_counter++)));
+        commands_counter += 100;
+        commands_to_send.push(std::string(std::to_string(commands_counter)));
         std::this_thread::sleep_for(std::chrono::seconds(2));
     }
 }

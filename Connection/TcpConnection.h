@@ -9,7 +9,7 @@
 #include <mutex>
 
 class TcpConnection: public Connection {
-    std::mutex * mutex_send_recv;
+    std::mutex mutex_send_recv;
 public:
     TcpConnection();
     ~TcpConnection() =default;

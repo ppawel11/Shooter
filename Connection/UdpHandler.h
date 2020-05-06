@@ -8,19 +8,21 @@
 #include "UdpConnection.h"
 #include "../Game/Game.h"
 #include <thread>
+#include <memory>
 
 class UdpHandler {
-    UdpConnection * connection;
-    std::thread initPacketSender;
+    std::shared_ptr<UdpConnection> connection;
+    std::shared_ptr<Game> game;
+
     std::thread commandsSender;
     std::thread gameStatusReader;
+
     bool active;
     std::string init_packet;
-    Game* game;
 public:
-    UdpHandler(UdpConnection *connection);
+    UdpHandler(std::shared_ptr<UdpConnection> &connection);
     ~UdpHandler();
-    void attachGame(Game * game);
+    void attachGame(std::shared_ptr<Game> &game);
     void start();
     void sendCommandsToServer();
     void recvGameState();

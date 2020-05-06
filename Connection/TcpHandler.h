@@ -7,22 +7,20 @@
 
 #include "TcpConnection.h"
 #include "../common.h"
-#include <chrono>
 #include <thread>
 #include <mutex>
-#include <iostream>
 #include "../Game/Game.h"
 
 class TcpHandler {
-    TcpConnection* connection;
+    std::shared_ptr<TcpConnection> connection;
+    std::shared_ptr<Game> game;
     std::thread keepAliveSender;
     std::thread gameStatusReader;
     bool active;
-    Game* game;
 public:
-    TcpHandler(TcpConnection * connection);
+    TcpHandler(std::shared_ptr<TcpConnection> &connection);
     ~TcpHandler();
-    void attachGame(Game * game);
+    void attachGame(std::shared_ptr<Game> &game);
     void start();
     void sendAlivePackets();
     void readGameStatus();

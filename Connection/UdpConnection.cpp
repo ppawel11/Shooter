@@ -24,7 +24,7 @@ void UdpConnection::initSocket() {
 
 void UdpConnection::sendPacket(const char *buf) {
     int packet_size = strlen(buf);
-    std::cout<<"SENDING UDP : "<<buf<<std::endl;
+    std::cout<<"UDP SEND : "<<buf<<std::endl;
     for(int total_sent = 0, now_sent = 0; total_sent < packet_size; total_sent += now_sent) {
         now_sent = sendto(sockfd, buf + total_sent, packet_size - total_sent, MSG_NOSIGNAL, (const struct sockaddr *) &server_address, sizeof(server_address));
         if(now_sent < 0)
@@ -33,7 +33,7 @@ void UdpConnection::sendPacket(const char *buf) {
 }
 
 std::string UdpConnection::readPacket() {
-    char buf[protocol::max_size];
+    char buf[protocol::max_size] = {0};
     socklen_t server_address_length = sizeof(server_address);
     int received = recvfrom(sockfd, &buf, protocol::max_size, MSG_DONTWAIT, (struct sockaddr *) &server_address, &server_address_length );
     if(received <= 0)

@@ -12,17 +12,17 @@
 #include "Game.h"
 
 class GameManager {
-    TcpConnection * tcp;
-    UdpConnection * udp;
-    TcpHandler * tcp_handler;
-    UdpHandler * udp_handler;
+    std::shared_ptr<TcpConnection> tcp;
+    std::shared_ptr<UdpConnection> udp;
+    std::shared_ptr<TcpHandler> tcp_handler;
+    std::shared_ptr<UdpHandler> udp_handler;
 public:
     GameManager();
     ~GameManager();
     void setUpTcpConnection();
     void setUpUdpSocket();
-    void initGame(Game * game);
-    std::string getInitPacket(Game * game);
+    void initGame(std::shared_ptr<Game> game);
+    std::string getInitPacket(std::shared_ptr<Game> &game);
 };
 
 

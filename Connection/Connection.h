@@ -6,15 +6,10 @@
 #define TIN_CONNECTION_H
 
 #include "../common.h"
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string>
 #include <cstring>
-#include <memory>
 #include <iostream>
 
 class Connection {

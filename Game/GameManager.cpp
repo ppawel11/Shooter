@@ -5,11 +5,11 @@
 #include "GameManager.h"
 
 GameManager::GameManager() {
-    tcp = new TcpConnection();
-    udp = new UdpConnection();
+    tcp = std::make_shared<TcpConnection>();
+    udp = std::make_shared<UdpConnection>();
 
-    tcp_handler = new TcpHandler(tcp);
-    udp_handler = new UdpHandler(udp);
+    tcp_handler = std::make_shared<TcpHandler>(tcp);
+    udp_handler = std::make_shared<UdpHandler>(udp);
 }
 
 void GameManager::setUpTcpConnection() {
@@ -24,10 +24,15 @@ void GameManager::setUpTcpConnection() {
 }
 
 void GameManager::setUpUdpSocket() {
-    udp->initSocket();
+    try {
+        udp->initSocket();
+    }catch(char const * e){
+        std::cout<<e<<std::endl;
+        exit(1);
+    }
 }
 
-void GameManager::initGame(Game * game) {
+void GameManager::initGame(std::shared_ptr<Game> game) {
     tcp_handler->attachGame(game);
     udp_handler->attachGame(game);
 
@@ -37,18 +42,12 @@ void GameManager::initGame(Game * game) {
     udp_handler->start();
 }
 
-std::string GameManager::getInitPacket(Game * game) {
+std::string GameManager::getInitPacket(std::shared_ptr<Game> &game) {
     return std::string("X" + game->getGameId());
 }
 
 GameManager::~GameManager() {
     tcp_handler->disable();
     udp_handler->disable();
-
-    delete tcp_handler;
-    delete udp_handler;
-
-    delete tcp;
-    delete udp;
 }
 

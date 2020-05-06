@@ -4,7 +4,7 @@
 
 #include "TcpHandler.h"
 
-TcpHandler::TcpHandler(TcpConnection * connection) {
+TcpHandler::TcpHandler(std::shared_ptr<TcpConnection> &connection) {
     this->connection = connection;
     this->game = nullptr;
     this->active = true;
@@ -12,8 +12,7 @@ TcpHandler::TcpHandler(TcpConnection * connection) {
 
 void TcpHandler::start() {
     keepAliveSender = std::thread(&TcpHandler::sendAlivePackets, this);
-    std::thread gameIdReader(std::thread(&TcpHandler::getGameId, this));
-    gameIdReader.join();
+    getGameId();
     gameStatusReader = std::thread(&TcpHandler::readGameStatus, this);
 }
 
@@ -58,7 +57,7 @@ void TcpHandler::enable(){
     active = true;
 }
 
-void TcpHandler::attachGame(Game *game) {
+void TcpHandler::attachGame(std::shared_ptr<Game> &game) {
     this->game = game;
 }
 

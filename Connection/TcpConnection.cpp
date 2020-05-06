@@ -8,7 +8,6 @@ TcpConnection::TcpConnection(){
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = inet_addr(server::ip);
     server_address.sin_port = htons(server::tcp_port);
-    mutex_send_recv = new std::mutex();
 }
 
 void TcpConnection::initSocket(){
@@ -23,9 +22,9 @@ void TcpConnection::connectToServer() {
 }
 
 void TcpConnection::sendPacket(const char *buf) {
-    std::lock_guard<std::mutex> guard(*mutex_send_recv);
+    std::lock_guard<std::mutex> guard(mutex_send_recv);
     int packet_size = strlen(buf);
-    std::cout<<"SENDING TCP : "<<buf<<std::endl;
+    std::cout<<"TCP SEND : "<<buf<<std::endl;
     for(int total_sent = 0, now_sent = 0; total_sent < packet_size; total_sent += now_sent) {
         now_sent = send(sockfd, buf+total_sent, packet_size - total_sent, MSG_NOSIGNAL);
         if(now_sent < 0)
@@ -34,7 +33,7 @@ void TcpConnection::sendPacket(const char *buf) {
 }
 
 std::string TcpConnection::readPacket() {
-    std::lock_guard<std::mutex> guard(*mutex_send_recv);
+    std::lock_guard<std::mutex> guard(mutex_send_recv);
     char buf[protocol::max_size] = {0};
     int received = recv(sockfd, &buf, sizeof(buf),  MSG_DONTWAIT);
     if(received == 0)
