@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(tin)
-
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+list(APPEND CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules")
+find_package(SFML 2.4 COMPONENTS graphics audio REQUIRED)
 
 find_package(SDL2 REQUIRED)
 include_directories(tin ${SDL2_INCLUDE_DIRS})
@@ -22,4 +22,4 @@ add_executable(tin main.cpp
         Model/PlayerModel.h Controller/Controller.cpp Controller/Controller.h Abstract/PacketsFactory.cpp Abstract/PacketsFactory.h Connection/Packets/Packet.h Connection/Packets/InitPacket.cpp Connection/Packets/InitPacket.h Connection/Packets/GameStatePacket.cpp Connection/Packets/GameStatePacket.h Connection/Packets/StartingPacket.cpp Connection/Packets/StartingPacket.h)
 
 target_link_libraries(tin ${SDL2_LIBRARIES})
-target_link_libraries(tin sfml-graphics sfml-audio)
+target_link_libraries(tin sfml-graphics sfml-window sfml-system)

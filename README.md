@@ -1,3 +1,7 @@
+Used libraries:  
+SFML: sudo apt install libsfml-dev  
+SDL2: sudo apt install libsdl2-dev
+
 Build and run:  
 $ cd build  
 $ cmake ..  
