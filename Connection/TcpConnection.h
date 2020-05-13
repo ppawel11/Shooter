@@ -14,7 +14,7 @@ public:
     TcpConnection();
     ~TcpConnection() =default;
     void initSocket() override;
-    void sendPacket(const char *buf) override;
+    void sendPacket(const char *buf, int len) override;
     std::string readPacket() override;
 
     void connectToServer();

@@ -21,12 +21,9 @@ void TcpConnection::connectToServer() {
         throw "connect call error";
 }
 
-void TcpConnection::sendPacket(const char *buf) {
-    std::lock_guard<std::mutex> guard(mutex_send_recv);
-    int packet_size = strlen(buf);
-    std::cout<<"TCP SEND : "<<buf<<std::endl;
-    for(int total_sent = 0, now_sent = 0; total_sent < packet_size; total_sent += now_sent) {
-        now_sent = send(sockfd, buf+total_sent, packet_size - total_sent, MSG_NOSIGNAL);
+void TcpConnection::sendPacket(const char *buf, int len) {
+    for(int total_sent = 0, now_sent = 0; total_sent < len; total_sent += now_sent) {
+        now_sent = send(sockfd, &buf+total_sent, len - total_sent, MSG_NOSIGNAL);
         if(now_sent < 0)
             throw "sending problem";
     }
@@ -36,7 +33,7 @@ std::string TcpConnection::readPacket() {
     std::lock_guard<std::mutex> guard(mutex_send_recv);
     char buf[protocol::max_size] = {0};
     int received = recv(sockfd, &buf, sizeof(buf),  MSG_DONTWAIT);
-    if(received == 0)
-        return "";
+    if(received > 0)
+        return std::string(buf, buf+received);
     return std::string(buf);
 }

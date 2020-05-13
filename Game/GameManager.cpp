@@ -43,7 +43,9 @@ void GameManager::initGame(std::shared_ptr<Game> game) {
 }
 
 std::string GameManager::getInitPacket(std::shared_ptr<Game> &game) {
-    return std::string("X" + game->getGameId());
+    std::string init_packet = "X";
+    init_packet.push_back((char)game->getGameId());
+    return init_packet;
 }
 
 GameManager::~GameManager() {

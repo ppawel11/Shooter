@@ -12,30 +12,52 @@
 #include <queue>
 #include <thread>
 #include "../Abstract/BlockingQueue.h"
+#include "../Controller/Controller.h"
+#include "../Connection/Packets/StartingPacket.h"
+#include "../Connection/Packets/InitPacket.h"
+#include "../Connection/Packets/GameStatePacket.h"
+#include "../Abstract/PacketsFactory.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+//#include <SDL2/SDL.h>
+
+class Packet;
+class Controller;
 
 class Game {
     bool running;
     bool finished;
-    std::string game_id;
+    int player_id;
+    direction going;
     int commands_counter;
     BlockingQueue<std::string> commands_to_send;
     std::thread main_thread;
     std::mutex over;
     std::mutex ready;
+    std::shared_ptr<Controller> controller;
+    PacketsFactory packet_factory;
+    int current_id;
+
 public:
-    Game();
+    Game(std::shared_ptr<Controller> contr);
     void start();
     void stop();
     bool isRunning();
     bool isFinished();
     void disconnect();
-    const std::string &getGameId();
+    const int getGameId();
     std::string getNextCommand();
-    void getTcpUpdate(std::string &update);
-    void getUdpUpdate(std::string &update);
+    void getUpdate(std::string &update);
+    void addCommand(direction command);
     void addCommand(std::string command);
-    void addCommands(); // only for testing
+    void getKeyboardCommands();
     void waitUntilOver();
+
+    // Packet handlers:
+    void handle(InitPacket *init_packet);
+    void handle(StartingPacket *start_packet);
+    void handle(GameStatePacket *game_state_packet);
+
 };
 
 

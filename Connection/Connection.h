@@ -20,7 +20,7 @@ public:
     Connection();
     ~Connection();
     virtual void initSocket() = 0;
-    virtual void sendPacket(const char *buf) = 0;
+    virtual void sendPacket(const char *buf, int len) = 0;
     virtual std::string readPacket() = 0;
     void closeSocket();
 };

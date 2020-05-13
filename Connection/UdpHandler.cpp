@@ -24,7 +24,7 @@ void UdpHandler::sendCommandsToServer() {
             active = false;
             break;
         }
-        connection->sendPacket(command.c_str());
+        connection->sendPacket(command.c_str(), command.length());
     }
 }
 
@@ -32,13 +32,13 @@ void UdpHandler::recvGameState() {
     while(!game->isFinished() && active) {
         std::string state = connection->readPacket();
         if(!state.empty())
-            game->getUdpUpdate(state);
+            game->getUpdate(state);
     }
 }
 
 void UdpHandler::sendInitPackets() {
     while(!game->isRunning() && !game->isFinished() && active){
-        connection->sendPacket(init_packet.c_str());
+        connection->sendPacket(init_packet.c_str(), init_packet.length());
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }

@@ -18,7 +18,7 @@ void TcpHandler::start() {
 void TcpHandler::sendAlivePackets() {
     while (active) {
         try {
-            connection->sendPacket(protocol::alive);
+            connection->sendPacket(protocol::alive, protocol::alive_len);
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }catch(const char * e){
             active = false;
@@ -32,7 +32,7 @@ void TcpHandler::recvGameInfo(){
     while(active){
         received = connection->readPacket();
         if(!received.empty()) {
-            game->getTcpUpdate(received);
+            game->getUpdate(received);
         }
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
