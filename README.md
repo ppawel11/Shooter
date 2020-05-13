@@ -12,7 +12,7 @@ Game server available at: https://github.com/Ficol/TIN
 
 Opis:
 
-Klient domyślnie łączy się z serwerem na adresie 127.0.0.1:8888, można to zmienić modyfikując odpowiednie parametry w pliku common.h. Próbuje również użyć portu 9000 do komunikacji UPD, co również można zmienić w common.h.
+Klient domyślnie łączy się z serwerem na adresie 127.0.0.1:8888 i używa portu 9000 do komunikacji UDP. Wartości te można zmienić w pliku “common.h”.
 
 Działanie:
 
