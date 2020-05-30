@@ -4,13 +4,13 @@
 
 #include "PacketsFactory.h"
 
-std::shared_ptr<Packet> PacketsFactory::createPacket(std::string &message) {
+std::shared_ptr<Packet> PacketsFactory::createPacket(std::string & message) {
     switch(message[0]){
-        case 'X':
+        case protocol::init_packet_mark:
             return std::make_shared<InitPacket>(message);
-        case 'S':
+        case protocol::starting_packet_mark:
             return std::make_shared<StartingPacket>(message);
-        case 'Y':
+        case protocol::game_state_packet_mark:
             return std::make_shared<GameStatePacket>(message);
         default:
             throw "unrecognized packet";

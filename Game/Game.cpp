@@ -4,6 +4,8 @@
 
 #include "Game.h"
 
+#include <utility>
+
 Game::Game(std::shared_ptr<Controller> contr){
     running = false;
     finished = false;
@@ -11,7 +13,7 @@ Game::Game(std::shared_ptr<Controller> contr){
     player_id = -1;
     over.lock();
     ready.lock();
-    controller = contr;
+    controller = std::move(contr);
     going = STOP;
     current_id = 0;
 }
@@ -28,14 +30,13 @@ void Game::handle(InitPacket *init_packet) {
 
 void Game::handle(StartingPacket *start_packet) {
     start();
-    controller->initWindow();
 }
 
 void Game::handle(GameStatePacket *game_state_packet) {
     if(game_state_packet->getStateId() > current_id) {
         current_id = game_state_packet->getStateId();
         std::vector<std::shared_ptr<PlayerModel>> players = game_state_packet->getPlayers();
-        for(auto p : players){
+        for(auto & p : players){
             if(p->id == player_id)
                 p->is_enemy = false;
         }
@@ -47,6 +48,7 @@ void Game::start() {
     running = true;
     main_thread = std::thread(&Game::getKeyboardCommands, this);
     main_thread.detach();
+    controller->initWindow();
 }
 
 void Game::stop(){
@@ -77,42 +79,23 @@ bool Game::isFinished() {
     return finished;
 }
 
-const int Game::getGameId() {
+int const Game::getGameId() {
     ready.lock();
     return player_id;
 }
 
 void Game::getKeyboardCommands() {
-    bool a_pressed, w_pressed, d_pressed, s_pressed;
-    int vertical, horizontal;
-
     while(running){
-        vertical = 1;
-        horizontal = 1;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
             stop();
             break;
         }
-        a_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        w_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        d_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-        s_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-
-        if(a_pressed)
-            horizontal -= 1;
-        if(d_pressed)
-            horizontal += 1;
-        if(w_pressed)
-            vertical -= 1;
-        if(s_pressed)
-            vertical += 1;
-        direction to_go = directions_board[vertical][horizontal];
+        direction to_go = getDirectionInput();
         if(to_go != STOP || to_go != going) {
-            addCommand(directions_board[vertical][horizontal]);
+            addCommand(to_go);
             going = to_go;
         }
         std::this_thread::yield();
-
     }
 }
 
@@ -128,4 +111,25 @@ void Game::waitUntilOver() {
 
 void Game::addCommand(std::string command) {
     commands_to_send.push(command);
+}
+
+direction Game::getDirectionInput() {
+    bool a_pressed, w_pressed, d_pressed, s_pressed;
+    int vertical = 1, horizontal = 1;
+
+    a_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+    w_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    d_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+    s_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+    if(a_pressed)
+        horizontal -= 1;
+    if(d_pressed)
+        horizontal += 1;
+    if(w_pressed)
+        vertical -= 1;
+    if(s_pressed)
+        vertical += 1;
+
+    return directions_board[vertical][horizontal];
 }

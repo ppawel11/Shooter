@@ -9,10 +9,11 @@
 #include "../Connection/Packets/GameStatePacket.h"
 #include "../Connection/Packets/InitPacket.h"
 #include "../Connection/Packets/StartingPacket.h"
+#include "../common.h"
 
 class PacketsFactory {
 public:
-    std::shared_ptr<Packet> createPacket(std::string &message);
+    std::shared_ptr<Packet> createPacket(std::string & message);
 };
 
 

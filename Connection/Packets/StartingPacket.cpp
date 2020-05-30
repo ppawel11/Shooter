@@ -1,5 +1,5 @@
 //
-// Created by qt on 12.05.2020.
+// Created by pawel on 12.05.2020.
 //
 
 #include "StartingPacket.h"

@@ -1,12 +1,14 @@
 //
-// Created by qt on 12.05.2020.
+// Created by pawel on 12.05.2020.
 //
 
 #include "GameStatePacket.h"
 #include "../../Game/Game.h"
 
 GameStatePacket::GameStatePacket(std::string &message) {
-    state_id = (unsigned int)message[1]*512+(unsigned int)message[2];
+    unsigned int pos_state_id_byte1 = 0x000000FF & message[2];
+    unsigned int pos_state_id_byte2 = 0x0000FF00 & (message[1]<<8);
+    state_id = (pos_state_id_byte1 | pos_state_id_byte2);
     int number_of_players = ((int)message.length() - 3) / 5;
     for(int i = 0; i < number_of_players; ++i){
         int id = message[3+5*i];

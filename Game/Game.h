@@ -50,8 +50,11 @@ public:
     void getUpdate(std::string &update);
     void addCommand(direction command);
     void addCommand(std::string command);
-    void getKeyboardCommands();
     void waitUntilOver();
+
+    // Movement:
+    void getKeyboardCommands();
+    direction getDirectionInput();
 
     // Packet handlers:
     void handle(InitPacket *init_packet);
