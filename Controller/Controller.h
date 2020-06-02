@@ -31,7 +31,8 @@ public:
     void deactivateWindow();
 
     void shoot(int angle);
-
+    void move(direction direction);
+    void finish();
 };
 
 #endif //TIN_CONTROLLER_H

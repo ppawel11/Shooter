@@ -20,7 +20,7 @@ void TcpHandler::sendAlivePackets() {
         try {
             connection->sendPacket(protocol::alive, protocol::alive_len);
             std::this_thread::sleep_for(std::chrono::seconds(1));
-        }catch(const char * e){
+        }catch(std::runtime_error & e){
             active = false;
             game->disconnect();
         }

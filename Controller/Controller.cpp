@@ -34,3 +34,11 @@ void Controller::deactivateWindow() {
 void Controller::shoot(int angle) {
     game_observer->shoot(angle);
 }
+
+void Controller::move(direction direction) {
+    game_observer->move(direction);
+}
+
+void Controller::finish() {
+    game_observer->stop();
+}

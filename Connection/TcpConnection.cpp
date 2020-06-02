@@ -12,20 +12,20 @@ TcpConnection::TcpConnection(){
 
 void TcpConnection::initSocket(){
     if((sockfd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-        throw "socket call error";
+        throw std::runtime_error("socket call error");
 
 }
 
 void TcpConnection::connectToServer() {
     if (connect(sockfd, (struct sockaddr *) &server_address, sizeof (server_address)) != 0)
-        throw "connect call error";
+        throw std::runtime_error("connect call error");
 }
 
 void TcpConnection::sendPacket(const char *buf, int len) {
     for(int total_sent = 0, now_sent = 0; total_sent < len; total_sent += now_sent) {
         now_sent = send(sockfd, &buf+total_sent, len - total_sent, MSG_NOSIGNAL);
         if(now_sent < 0)
-            throw "sending problem";
+            throw std::runtime_error("sending problem");
     }
 }
 

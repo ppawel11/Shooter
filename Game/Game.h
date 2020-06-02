@@ -16,10 +16,8 @@
 #include "../Connection/Packets/StartingPacket.h"
 #include "../Connection/Packets/InitPacket.h"
 #include "../Connection/Packets/GameStatePacket.h"
+#include "../Connection/Packets/EndOfGamePacket.h"
 #include "../Abstract/PacketsFactory.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SDL2/SDL.h>
 
 class Packet;
 class Controller;
@@ -29,9 +27,7 @@ class Game {
     bool finished;
     int player_id;
     direction going;
-    int commands_counter;
     BlockingQueue<std::string> commands_to_send;
-    std::thread main_thread;
     std::mutex over;
     std::mutex ready;
     std::shared_ptr<Controller> controller;
@@ -48,21 +44,18 @@ public:
     const int getGameId();
     std::string getNextCommand();
     void getUpdate(std::string &update);
-    void addCommand(direction command);
     void addCommand(std::string command);
     void waitUntilOver();
 
-    // Movement:
-    void getKeyboardCommands();
-    direction getDirectionInput();
-
+    // Player actions:
     void shoot(int angle);
+    void move(direction to_go);
 
     // Packet handlers:
     void handle(InitPacket *init_packet);
     void handle(StartingPacket *start_packet);
     void handle(GameStatePacket *game_state_packet);
-
+    void handle(EndOfGamePacket *end_packet);
 };
 
 

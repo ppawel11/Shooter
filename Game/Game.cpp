@@ -9,7 +9,6 @@
 Game::Game(std::shared_ptr<Controller> contr){
     running = false;
     finished = false;
-    commands_counter = 0;
     player_id = -1;
     over.lock();
     ready.lock();
@@ -44,10 +43,12 @@ void Game::handle(GameStatePacket *game_state_packet) {
     }
 }
 
+void Game::handle(EndOfGamePacket *end_packet) {
+    stop();
+}
+
 void Game::start() {
     running = true;
-    main_thread = std::thread(&Game::getKeyboardCommands, this);
-    main_thread.detach();
     controller->initWindow();
 }
 
@@ -84,26 +85,14 @@ int const Game::getGameId() {
     return player_id;
 }
 
-void Game::getKeyboardCommands() {
-    while(running){
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
-            stop();
-            break;
-        }
-        direction to_go = getDirectionInput();
-        if(to_go != STOP || to_go != going) {
-            addCommand(to_go);
-            going = to_go;
-        }
-        std::this_thread::yield();
+void Game::move(direction to_go) {
+    if(to_go != STOP || to_go != going) {
+        std::string command_str;
+        command_str.push_back(protocol::move_packet_mark);
+        command_str.push_back((char)(unsigned int)to_go);
+        commands_to_send.push(command_str);
+        going = to_go;
     }
-}
-
-void Game::addCommand(direction command) {
-    std::string command_str;
-    command_str.push_back(protocol::move_packet_mark);
-    command_str.push_back((char)(unsigned int)command);
-    commands_to_send.push(command_str);
 }
 
 void Game::waitUntilOver() {
@@ -114,30 +103,10 @@ void Game::addCommand(std::string command) {
     commands_to_send.push(command);
 }
 
-direction Game::getDirectionInput() {
-    bool a_pressed, w_pressed, d_pressed, s_pressed;
-    int vertical = 1, horizontal = 1;
-
-    a_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-    w_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-    d_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-    s_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-
-    if(a_pressed)
-        horizontal -= 1;
-    if(d_pressed)
-        horizontal += 1;
-    if(w_pressed)
-        vertical -= 1;
-    if(s_pressed)
-        vertical += 1;
-
-    return directions_board[vertical][horizontal];
-}
-
 void Game::shoot(int angle) {
     std::string command;
     command.push_back(protocol::shoot_packet_mark);
     command.push_back((char)(255*(angle/360.0)));
     addCommand(command);
 }
+

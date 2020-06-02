@@ -6,6 +6,7 @@
 #define TIN_UDPHANDLER_H
 
 #include "UdpConnection.h"
+#include "CrcModule.h"
 #include "../Game/Game.h"
 #include <thread>
 #include <memory>
@@ -17,6 +18,7 @@ class UdpHandler {
     std::thread commands_sender;
     std::thread game_state_reader;
 
+    CrcModule crc;
     bool active;
     std::string init_packet;
 public:

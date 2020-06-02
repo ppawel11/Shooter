@@ -19,7 +19,7 @@ add_executable(tin main.cpp
         Connection/UdpHandler.cpp Connection/UdpHandler.h
         Abstract/BlockingQueue.h
         View/GameWindow/GameWindow.cpp View/GameWindow/GameWindow.h
-        Model/PlayerModel.h Controller/Controller.cpp Controller/Controller.h Abstract/PacketsFactory.cpp Abstract/PacketsFactory.h Connection/Packets/Packet.h Connection/Packets/InitPacket.cpp Connection/Packets/InitPacket.h Connection/Packets/GameStatePacket.cpp Connection/Packets/GameStatePacket.h Connection/Packets/StartingPacket.cpp Connection/Packets/StartingPacket.h Model/BulletModel.h)
+        Model/PlayerModel.h Controller/Controller.cpp Controller/Controller.h Abstract/PacketsFactory.cpp Abstract/PacketsFactory.h Connection/Packets/Packet.h Connection/Packets/InitPacket.cpp Connection/Packets/InitPacket.h Connection/Packets/GameStatePacket.cpp Connection/Packets/GameStatePacket.h Connection/Packets/StartingPacket.cpp Connection/Packets/StartingPacket.h Model/BulletModel.h Connection/CrcModule.cpp Connection/CrcModule.h Connection/Packets/EndOfGamePacket.cpp Connection/Packets/EndOfGamePacket.h)
 
 target_link_libraries(tin ${SDL2_LIBRARIES})
 target_link_libraries(tin sfml-graphics sfml-window sfml-system)

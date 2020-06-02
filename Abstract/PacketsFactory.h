@@ -9,6 +9,8 @@
 #include "../Connection/Packets/GameStatePacket.h"
 #include "../Connection/Packets/InitPacket.h"
 #include "../Connection/Packets/StartingPacket.h"
+#include "../Connection/Packets/EndOfGamePacket.h"
+
 #include "../common.h"
 
 class PacketsFactory {

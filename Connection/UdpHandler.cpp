@@ -8,6 +8,7 @@ UdpHandler::UdpHandler(std::shared_ptr<UdpConnection> &connection) {
     this->connection = connection;
     this->game = nullptr;
     active = true;
+    crc = CrcModule();
 }
 
 
@@ -24,21 +25,23 @@ void UdpHandler::sendCommandsToServer() {
             active = false;
             break;
         }
-        connection->sendPacket(command.c_str(), command.length());
+        std::string command_with_crc = crc.getMessageWithCrc(command);
+        connection->sendPacket(command_with_crc.c_str(), command_with_crc.length());
     }
 }
 
 void UdpHandler::recvGameState() {
     while(!game->isFinished() && active) {
         std::string state = connection->readPacket();
-        if(!state.empty())
+        if(!state.empty() && crc.checkAndRemoveMessageSum(state))
             game->getUpdate(state);
     }
 }
 
 void UdpHandler::sendInitPackets() {
     while(!game->isRunning() && !game->isFinished() && active){
-        connection->sendPacket(init_packet.c_str(), init_packet.length());
+        std::string init_packet_crc = crc.getMessageWithCrc(init_packet);
+        connection->sendPacket(init_packet_crc.c_str(), init_packet_crc.length());
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }

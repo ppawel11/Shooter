@@ -9,6 +9,8 @@
 #include "../../Connection/Packets/GameStatePacket.h"
 #include "../../Controller/Controller.h"
 #include <mutex>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <SDL2/SDL.h>
 
 class Controller;
@@ -27,6 +29,11 @@ public:
     void start();
     void stop();
     void loop();
+
+    direction getDirectionInput();
+
+    void drawComponents();
+    void clearScreen();
 
     void drawPlayerRect(std::shared_ptr<PlayerModel> &player);
     void drawBulletRect(std::shared_ptr<BulletModel> &bullet);

@@ -16,9 +16,9 @@ void GameManager::setUpTcpConnection() {
     try{
         tcp->initSocket();
         tcp->connectToServer();
-    }catch(char const * e){
+    }catch(std::runtime_error & e){
         // unable to connect
-        std::cout<<e<<std::endl;
+        std::cout<<e.what()<<std::endl;
         exit(1);
     }
 }
@@ -26,8 +26,8 @@ void GameManager::setUpTcpConnection() {
 void GameManager::setUpUdpSocket() {
     try {
         udp->initSocket();
-    }catch(char const * e){
-        std::cout<<e<<std::endl;
+    }catch(std::runtime_error & e){
+        std::cout<<e.what()<<std::endl;
         exit(1);
     }
 }

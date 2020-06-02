@@ -19,7 +19,7 @@ GameWindow::GameWindow(std::shared_ptr<Controller> contr) {
 
 void GameWindow::start() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
-        throw "sdl could not initialize";
+        throw std::runtime_error("sdl could not initialize");
     active = true;
     view = SDL_CreateWindow("Shooter X", 500, 100, view::window_width, view::window_height, SDL_WINDOW_OPENGL);
     renderer = SDL_CreateRenderer( view, -1, SDL_RENDERER_ACCELERATED);
@@ -38,14 +38,17 @@ void GameWindow::loop() {
             }
         }
 
-        SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
-        SDL_RenderClear( renderer );
-        for(auto & p : players)
-            drawPlayerRect(p);
-        for(auto & b : bullets) {
-            drawBulletRect(b);
-        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            controller->finish();
+
+        direction to_go = getDirectionInput();
+        controller->move(to_go);
+
+        clearScreen();
+        drawComponents();
         SDL_RenderPresent(renderer);
+
+//        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
     SDL_DestroyWindow(view);
     SDL_Quit();
@@ -119,4 +122,35 @@ void GameWindow::shoot(int &x, int &y) {
     controller->shoot(angle);
 }
 
+direction GameWindow::getDirectionInput() {
+    bool a_pressed, w_pressed, d_pressed, s_pressed;
+    int vertical = 1, horizontal = 1;
 
+    a_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+    w_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    d_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+    s_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+    if(a_pressed)
+        horizontal -= 1;
+    if(d_pressed)
+        horizontal += 1;
+    if(w_pressed)
+        vertical -= 1;
+    if(s_pressed)
+        vertical += 1;
+
+    return directions_board[vertical][horizontal];
+}
+
+void GameWindow::drawComponents() {
+        for(auto & p : players)
+            drawPlayerRect(p);
+        for(auto & b : bullets)
+            drawBulletRect(b);
+}
+
+void GameWindow::clearScreen() {
+    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+    SDL_RenderClear( renderer );
+}

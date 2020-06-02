@@ -17,16 +17,16 @@ UdpConnection::UdpConnection() {
 
 void UdpConnection::initSocket() {
     if((sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-        throw "socket call error";
+        throw std::runtime_error("socket call error");
     if(bind (sockfd, (struct sockaddr *) &client_address, sizeof (client_address)) < 0)
-        throw "bind error";
+        throw std::runtime_error("bind error");
 }
 
 void UdpConnection::sendPacket(const char *buf, int len) {
     for(int total_sent = 0, now_sent = 0; total_sent < len; total_sent += now_sent) {
         now_sent = sendto(sockfd, buf + total_sent, len - total_sent, MSG_NOSIGNAL, (const struct sockaddr *) &server_address, sizeof(server_address));
         if(now_sent < 0)
-            throw "sending problem";
+            throw std::runtime_error("sending problem");
     }
 }
 
