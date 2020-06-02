@@ -9,7 +9,7 @@ int main() {
     std::shared_ptr<Controller> contr = std::make_shared<Controller>();
     std::shared_ptr<Game> game = std::make_shared<Game>(contr);
     std::shared_ptr<GameManager> game_manager = std::make_shared<GameManager>();
-    std::shared_ptr<GameWindow> window = std::make_shared<GameWindow>();
+    std::shared_ptr<GameWindow> window = std::make_shared<GameWindow>(contr);
 
     contr->attachGame(game);
     contr->attachGameWindow(window);

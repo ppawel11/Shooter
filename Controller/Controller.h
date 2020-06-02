@@ -10,6 +10,7 @@
 #include "../Connection/Packets/GameStatePacket.h"
 
 class Game;
+class GameWindow;
 
 class Controller
 {
@@ -28,6 +29,9 @@ public:
     void updateWindow(GameStatePacket * game_state);
     void initWindow();
     void deactivateWindow();
+
+    void shoot(int angle);
+
 };
 
 #endif //TIN_CONTROLLER_H

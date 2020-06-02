@@ -19,7 +19,7 @@
 #include "../Abstract/PacketsFactory.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-//#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 
 class Packet;
 class Controller;
@@ -55,6 +55,8 @@ public:
     // Movement:
     void getKeyboardCommands();
     direction getDirectionInput();
+
+    void shoot(int angle);
 
     // Packet handlers:
     void handle(InitPacket *init_packet);

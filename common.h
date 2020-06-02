@@ -34,12 +34,15 @@ namespace protocol{
     static const char starting_packet_mark = 'S';
     static const char init_packet_mark = 'X';
     static const char game_state_packet_mark = 'Y';
+    static const char shoot_packet_mark = 'Z';
+    static const char move_packet_mark = 'T';
 }
 
-namespace window{
-    static const int height = 600;
-    static const int width = 800;
-    static const float move_bit = 0.2;
+namespace view{
+    static const int window_height = 600;
+    static const int window_width = 600;
+    static const int player_size = 10;
+    static const int bullet_size = 6;
 }
 
 #endif //TIN_COMMON_H

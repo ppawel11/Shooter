@@ -100,7 +100,8 @@ void Game::getKeyboardCommands() {
 }
 
 void Game::addCommand(direction command) {
-    std::string command_str = "T";
+    std::string command_str;
+    command_str.push_back(protocol::move_packet_mark);
     command_str.push_back((char)(unsigned int)command);
     commands_to_send.push(command_str);
 }
@@ -132,4 +133,11 @@ direction Game::getDirectionInput() {
         vertical += 1;
 
     return directions_board[vertical][horizontal];
+}
+
+void Game::shoot(int angle) {
+    std::string command;
+    command.push_back(protocol::shoot_packet_mark);
+    command.push_back((char)(255*(angle/360.0)));
+    addCommand(command);
 }
