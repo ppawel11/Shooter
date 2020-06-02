@@ -18,7 +18,13 @@ Game::Game(std::shared_ptr<Controller> contr){
 }
 
 void Game::getUpdate(std::string &update){
-    std::shared_ptr<Packet> received = packet_factory.createPacket(update);
+    std::shared_ptr<Packet> received;
+    try {
+        received = packet_factory.createPacket(update);
+    } catch (std::runtime_error & e) {
+        std::cout<<e.what()<<" : "<<update<<std::endl;
+        return;
+    }
     received->beHandled(this);
 }
 

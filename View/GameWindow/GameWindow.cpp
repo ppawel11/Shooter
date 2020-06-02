@@ -71,7 +71,7 @@ void GameWindow::drawPlayerRect(std::shared_ptr<PlayerModel> &player) {
 }
 
 void GameWindow::drawBulletRect(std::shared_ptr<BulletModel> &bullet) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 215, 30, 255);
     SDL_Rect r = setUpBulletRect(bullet);
     SDL_RenderFillRect(renderer, &r);
 }
@@ -151,6 +151,6 @@ void GameWindow::drawComponents() {
 }
 
 void GameWindow::clearScreen() {
-    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+    SDL_SetRenderDrawColor( renderer, 0, 0, 3, 255 );
     SDL_RenderClear( renderer );
 }
